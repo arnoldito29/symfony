@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello!{% endblock %}
+
+{% block body %}
+    <div class="login-page">
+        <div class="form">
+            Sveiki,<br>
+            <a href="{{ url('login') }}">Login</a> <a href="{{ url('register') }}">Register</a>
+        </div>
+    </div>
+{% endblock %}
