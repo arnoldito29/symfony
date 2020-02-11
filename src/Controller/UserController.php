@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use \Symfony\Component\Form\Form;
 
 class UserController extends AbstractController
 {
@@ -31,11 +32,14 @@ class UserController extends AbstractController
         // ...
 
         $form = $this->createForm(UserRegisterFormType::class, $user);
-        //$form->handleRequest($request);
+        $form->handleRequest($request);
 
         if ($request->isMethod('POST')) {
-            $form->submit($request->request->get($form->getName()));
+            $postData = $request->getContent();
+            $data = [];
+            parse_str(html_entity_decode($postData), $data);
 
+            $form->submit($data[$form->getName()]);
             if ($form->isSubmitted() && $form->isValid()) {
 
                 // perform some action...
@@ -51,9 +55,16 @@ class UserController extends AbstractController
                     'status' => 'OK',
                     'message' => 1),
                     200);
+            } else {
+
+                return new JsonResponse(array(
+                    'status' => 'error',
+                    'message' => 'Invalid form',
+                    'data' => $this->getErrorMessages($form)
+                ),
+                    200);
             }
         }
-
 
         return $this->render('users/register.html.twig', [
             'form' => $form->createView(),
@@ -68,5 +79,26 @@ class UserController extends AbstractController
         return $this->render('users/login.html.twig', [
             'controller_name' => 'UserController',
         ]);
+    }
+
+    /**
+     * @param Form $form
+     * @return array
+     */
+    protected function getErrorMessages(Form $form)
+    {
+        $errors = array();
+
+        foreach ($form->getErrors() as $key => $error) {
+            $errors[] = $error->getMessage();
+        }
+
+        foreach ($form->all() as $child) {
+            if (!$child->isValid()) {
+                $errors[$child->getName()] = $this->getErrorMessages($child);
+            }
+        }
+
+        return $errors;
     }
 }

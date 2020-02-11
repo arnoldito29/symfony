@@ -13,5 +13,6 @@ return [
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
-    Gregwar\CaptchaBundle\GregwarCaptchaBundle::class => ['all' => true]
+    Gregwar\CaptchaBundle\GregwarCaptchaBundle::class => ['all' => true],
+    Rollerworks\Bundle\PasswordStrengthBundle\RollerworksPasswordStrengthBundle::class => ['all' => true],
 ];
