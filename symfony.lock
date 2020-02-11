@@ -90,6 +90,12 @@
     "egulias/email-validator": {
         "version": "2.1.15"
     },
+    "gregwar/captcha": {
+        "version": "v1.1.8"
+    },
+    "gregwar/captcha-bundle": {
+        "version": "v2.1.1"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -503,15 +509,6 @@
             "./package.json",
             "./webpack.config.js"
         ]
-    },
-    "symfony/webpack-encore-pack": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "e18b0c550c3ee79142dc314b3e38193caafe4bb5"
-        }
     },
     "symfony/yaml": {
         "version": "v5.0.4"

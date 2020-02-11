@@ -1,17 +1,16 @@
 import $ from 'jquery';
 
-$('#register-form-button').click(function() {
-    let name = $('#name').val();
-    let email = $('#email').val();
-    let password = $('#password').val();
-    let repeatPassword = $('#repeat-password').val();
-    let data = JSON.stringify({name: name, email: email, password: password, repeatPassword: repeatPassword});
+$("#user_register_form").submit(function(e) {
+    //e.preventDefault(); testing without ajax
+    let form = $(this);
+    let url = form.attr('action');
+
     $.ajax({
-        url: '/register',
-        type: 'POST',
+        type: "POST",
+        url: url,
+        data: form.serialize(),
         contentType: "application/json",
         dataType: 'json',
-        data: data,
         success: function (data, status) {
             console.log("DATA", data);
         }

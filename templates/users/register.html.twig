@@ -4,14 +4,11 @@
 {% block body %}
 <div class="login-page">
     <div class="form">
-        <form class="register-form">
-            <input type="text" id="name" placeholder="name"/>
-            <input type="email" id="email" placeholder="email@email.com"/>
-            <input type="password" id="password" placeholder="password"/>
-            <input type="password" id="repeat-password"/>
-            <button type="button" id="register-form-button">create</button>
-            <p class="message">Already registered? <a href="{{ url('login') }}">Sign In</a></p>
-        </form>
+
+        {{ form(form, {'attr': {'class': 'register-form', 'id': 'user_register_form','novalidate': 'novalidate'}}) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+        <p class="message">Already registered? <a href="{{ url('login') }}">Sign In</a></p>
     </div>
 </div>
 {% endblock %}
