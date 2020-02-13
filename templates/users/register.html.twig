@@ -5,7 +5,7 @@
 <div class="login-page">
     <div class="form">
         <div id="welcome">Užsiregistravote !!!</div>
-        {{ form(form, {'attr': {'class': 'register-form', 'id': 'user_register_form','novalidate': 'novalidate'}}) }}
+        {{ form(form, {'attr': {'class': 'register-form', 'id': 'user_register_form','novalidate': 'novalidate', 'action': url('register')}}) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
         <p class="message">Already registered? <a href="{{ url('login') }}">Sign In</a></p>

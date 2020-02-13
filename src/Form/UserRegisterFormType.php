@@ -38,10 +38,13 @@ class UserRegisterFormType extends AbstractType
                 'required' => true,
                 'first_options'  => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
-                'constraints' => new Regex(array(
-                    'pattern' => '/^(?=.*[a-z])(?=.*[A-Z]{1,})(?=.*\\d)(?=.*[!@£]{1,}).{5,}$/i',
-                    'message' => 'Password is required to be minimum 5 chars in length and to include at least one uppercase letter, one number and one special simbol.'
-                ))
+                'constraints' => [
+                    new NotBlank(),
+                    new Regex(array(
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z]{1,})(?=.*\\d)(?=.*[!@£]{1,}).{5,}$/i',
+                        'message' => 'Password is required to be minimum 5 chars in length and to include at least one uppercase letter, one number and one special simbol.'
+                    ))
+                ],
             ])
             ->add('captcha', CaptchaType::class)
             ->add('submit', SubmitType::class);

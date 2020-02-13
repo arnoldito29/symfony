@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -23,7 +23,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json_array")
      */
     private $roles = [];
 
@@ -76,10 +76,11 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        // give everyone ROLE_USER!
+        if (!in_array('ROLE_USER', $roles)) {
+            $roles[] = 'ROLE_USER';
+        }
+        return $roles;
     }
 
     public function setRoles(array $roles): self
@@ -143,5 +144,24 @@ class User implements UserInterface
         $this->status = $status;
 
         return $this;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id, $this->name, $this->email, $this->roles, $this->status,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list ($this->id, $this->name, $this->email, $this->roles, $this->status)
+
+            = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    public function isEnabled ()
+    {
+        return (0 < $this->status);
     }
 }

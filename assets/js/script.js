@@ -28,3 +28,27 @@ $("#user_register_form").submit(function(e) {
         }
     });
 });
+
+$("#user_login_form").submit(function(e) {
+    e.preventDefault();
+    let form = $(this);
+    let url = form.attr('action');
+    $('.errors').remove();
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: form.serialize(),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function (data, status) {
+            if(data.status == 'error') {
+                for (var key in data.data) {
+                    $(form.find('[name*="'+key+'"]')[0]).before('<ul class="errors"><li>'+data.data[key]+'</li></ul>');
+                }
+            } else {
+                location.reload();
+            }
+        }
+    });
+});

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\LoginFormType;
 use App\Form\UserRegisterFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use \Symfony\Component\Form\Form;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
 {
@@ -29,7 +31,6 @@ class UserController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new User();
-        // ...
 
         $form = $this->createForm(UserRegisterFormType::class, $user);
         $form->handleRequest($request);
@@ -45,6 +46,8 @@ class UserController extends AbstractController
                 // perform some action...
                 $password = $passwordEncoder->encodePassword($user, $user->getPassword());
                 $user->setPassword($password);
+                $user->setRoles(['ROLE_USER']);
+                $user->setStatus(false);
 
                 // 4) save the User!
                 $entityManager = $this->getDoctrine()->getManager();
@@ -74,10 +77,14 @@ class UserController extends AbstractController
     /**
      * @Route("/login", name="login")
      */
-    public function login()
+    public function login(Request $request, AuthenticationUtils $authenticationUtils)
     {
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+
         return $this->render('users/login.html.twig', [
-            'controller_name' => 'UserController',
+            'error' => $error,
+            'lastUsername' => $lastUsername,
         ]);
     }
 
@@ -100,5 +107,22 @@ class UserController extends AbstractController
         }
 
         return $errors;
+    }
+
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout()
+    {
+        return $this->redirect($this->generateUrl('user_logout'));
+    }
+
+    /**
+     * @Route("/profile", name="profile")
+     */
+    public function profile()
+    {
+        return $this->render('users/profile.html.twig', [
+        ]);
     }
 }
