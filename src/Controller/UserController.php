@@ -28,7 +28,7 @@ class UserController extends AbstractController
     /**
      * @Route("/register", name="register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer)
     {
         $user = new User();
 
@@ -53,6 +53,18 @@ class UserController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($user);
                 $entityManager->flush();
+
+                $message = (new \Swift_Message('Hello Email'))
+                    ->setFrom('send@example.com')
+                    ->setTo('recipient@example.com')
+                    ->setBody(
+                        $this->renderView(
+                            'emails/registration.html.twig',
+                            ['name' => $data[$form->getName()]['name']]
+                        ),
+                        'text/html'
+                    );
+                $mailer->send($message);
 
                 return new JsonResponse(array(
                     'status' => 'OK',
